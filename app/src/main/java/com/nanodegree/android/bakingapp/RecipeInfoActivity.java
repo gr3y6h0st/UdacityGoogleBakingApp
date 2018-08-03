@@ -25,13 +25,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class Recipe_Information extends AppCompatActivity implements
-        RecipesInfoAdapter.RecipesInfoAdapterOnClickListener, LoaderManager.LoaderCallbacks<List<RecipeIngredientInfo>>{
+public class RecipeInfoActivity extends AppCompatActivity implements
+        RecipesInfoAdapter.RecipesInfoAdapterOnClickListener,
+        LoaderManager.LoaderCallbacks<List<RecipeIngredientInfo>>{
 
     @BindView(R.id.recipe_info_rv)
     RecyclerView recipeInfoRv;
     private RecipesInfoAdapter mRecipeInfoAdapter;
-    private Context mContext = Recipe_Information.this;
+    private Context mContext = RecipeInfoActivity.this;
 
     BakingData selectedRecipeData;
     int mRecipeID;
@@ -48,9 +49,10 @@ public class Recipe_Information extends AppCompatActivity implements
 
         recipeInfoRv.setLayoutManager(layoutManager);
         recipeInfoRv.setHasFixedSize(true);
+
+
         Intent intent = getIntent();
         if (intent == null) throw new NullPointerException("YOUR INTENT cannot be null");
-
         selectedRecipeData = (BakingData) intent.getSerializableExtra("RecipeData");
         //TODO:UNLOAD RECIPE ID/POSITION and USE FOR ASYNCTASK call to Util Class
         mRecipeID = selectedRecipeData.getRecipe_id();
@@ -86,7 +88,7 @@ public class Recipe_Information extends AppCompatActivity implements
                     protected void onStartLoading() {
                         if (mRecipeIngredientInfo != null) {
                             deliverResult(mRecipeIngredientInfo);
-                            System.out.println("BAKING DATA! delivering data!");
+                            System.out.println("BAKING DATA! delivering RECIPE INFO!");
                         } else {
                             forceLoad();
                             System.out.println("BAKING DATA forceloading.");
@@ -128,7 +130,6 @@ public class Recipe_Information extends AppCompatActivity implements
 
         if(data != null){
             RecipeIngredientInfoList = data;
-
             recipeInfoRv.setAdapter(mRecipeInfoAdapter);
             recipeInfoRv.setHasFixedSize(true);
             mRecipeInfoAdapter.notifyRecipeIngredientInfoChange(RecipeIngredientInfoList);

@@ -108,7 +108,6 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
     public void notifyBakingDataChange(List<BakingData> bakingData){
         mData = new ArrayList<BakingData>();
         mData = bakingData;
-
         notifyDataSetChanged();
     }
 }

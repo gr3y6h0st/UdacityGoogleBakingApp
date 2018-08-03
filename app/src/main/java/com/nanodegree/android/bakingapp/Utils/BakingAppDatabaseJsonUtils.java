@@ -57,7 +57,7 @@ public final class BakingAppDatabaseJsonUtils {
     public static List<RecipeIngredientInfo> getRecipeIngredients(String json, int recipeId) throws JSONException {
         JSONArray recipeList = new JSONArray(json);
         List<RecipeIngredientInfo> recipeIngredients = new ArrayList<RecipeIngredientInfo>();
-        JSONObject recipeObj = recipeList.getJSONObject(recipeId);
+        JSONObject recipeObj = recipeList.getJSONObject(recipeId - 1);
         JSONArray ingredientsArr = recipeObj.getJSONArray(RECIPE_INGREDIENTS);
 
         for(int x = 0; x < ingredientsArr.length(); x++){
