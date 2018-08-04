@@ -1,146 +1,50 @@
 package com.nanodegree.android.bakingapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.nanodegree.android.bakingapp.BakingData.BakingData;
-import com.nanodegree.android.bakingapp.BakingData.RecipeIngredientInfo;
-import com.nanodegree.android.bakingapp.Utils.BakingAppDatabaseJsonUtils;
-import com.nanodegree.android.bakingapp.Utils.NetworkUtils;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class RecipeInfoActivity extends AppCompatActivity implements
-        RecipesInfoAdapter.RecipesInfoAdapterOnClickListener,
-        LoaderManager.LoaderCallbacks<List<RecipeIngredientInfo>>{
-
-    @BindView(R.id.recipe_info_rv)
-    RecyclerView recipeInfoRv;
-    private RecipesInfoAdapter mRecipeInfoAdapter;
-    private Context mContext = RecipeInfoActivity.this;
-
-    BakingData selectedRecipeData;
+public class RecipeInfoActivity extends AppCompatActivity {
     int mRecipeID;
-    public static List<RecipeIngredientInfo> RecipeIngredientInfoList = new ArrayList<>();
-    public static final int ID_RECIPE_INFO_LOADER = 119;
+    BakingData selectedRecipeData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe__information);
-        ButterKnife.bind(this);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+        //create FragmentManager and new reference to Fragment.
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        RecipeInfoFragment recipeInfoListFragment = new RecipeInfoFragment();
 
-        recipeInfoRv.setLayoutManager(layoutManager);
-        recipeInfoRv.setHasFixedSize(true);
-
-
-        Intent intent = getIntent();
-        if (intent == null) throw new NullPointerException("YOUR INTENT cannot be null");
-        selectedRecipeData = (BakingData) intent.getSerializableExtra("RecipeData");
-        //TODO:UNLOAD RECIPE ID/POSITION and USE FOR ASYNCTASK call to Util Class
+        Intent mainActivityIntent = getIntent();
+        //TODO: Pass recipeID to Fragment.
+        selectedRecipeData = (BakingData) mainActivityIntent.getSerializableExtra("RecipeData");
         mRecipeID = selectedRecipeData.getRecipe_id();
+        Bundle bundle = new Bundle();
+        bundle.putInt("recipe_id", mRecipeID);
 
-        //TODO: Declare and set a RecyclerViewAdapter
-        mRecipeInfoAdapter = new RecipesInfoAdapter(mContext, RecipeIngredientInfoList, this);
-        recipeInfoRv.setAdapter(mRecipeInfoAdapter);
+        //set bundle as argument on fragment obj
+        recipeInfoListFragment.setArguments(bundle);
 
-        LoaderManager.enableDebugLogging(true);
+        //Commit Transaction
+        fragmentManager.beginTransaction()
+                .add(R.id.fragment_recipe_info, recipeInfoListFragment)
+                .commit();
 
-        getSupportLoaderManager().initLoader(ID_RECIPE_INFO_LOADER, null, this);
 
-    }
 
-    @Override
-    public void onItemClick(int clickedPosition) {
+        //TODO: could use custom methods to set data within Fragment.
 
-    }
+        RecipeStepsFragment recipeStepsFragment = new RecipeStepsFragment();
+        recipeStepsFragment.setArguments(bundle);
+        fragmentManager.beginTransaction()
+                .add(R.id.fragment_recipe_steps2, recipeStepsFragment)
+                .commit();
 
-    @NonNull
-    @Override
-    public Loader<List<RecipeIngredientInfo>> onCreateLoader(int id, @Nullable Bundle args) {
-
-        switch (id) {
-
-            case ID_RECIPE_INFO_LOADER:
-                System.out.println(id);
-
-                return new AsyncTaskLoader<List<RecipeIngredientInfo>>(this) {
-                    List<RecipeIngredientInfo> mRecipeIngredientInfo;
-
-                    @Override
-                    protected void onStartLoading() {
-                        if (mRecipeIngredientInfo != null) {
-                            deliverResult(mRecipeIngredientInfo);
-                            System.out.println("BAKING DATA! delivering RECIPE INFO!");
-                        } else {
-                            forceLoad();
-                            System.out.println("BAKING DATA forceloading.");
-                        }
-                    }
-
-                    @Override
-                    public void deliverResult(@Nullable List<RecipeIngredientInfo> data) {
-                        mRecipeIngredientInfo = data;
-                        super.deliverResult(data);
-                    }
-
-                    @Nullable
-                    @Override
-                    public List<RecipeIngredientInfo> loadInBackground() {
-
-                        try {
-                            URL recipeInfoRequestUrl = NetworkUtils.buildUrl();
-
-                            String jsonRecipeIngredientInfobaseResponse = NetworkUtils.getResponseFromHttpUrl(recipeInfoRequestUrl);
-
-                            List<RecipeIngredientInfo> simpleRecipeInfoJson = BakingAppDatabaseJsonUtils.getRecipeIngredients(jsonRecipeIngredientInfobaseResponse, mRecipeID);
-
-                            return simpleRecipeInfoJson;
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return null;
-                        }
-                    }
-                };
-            default:
-                throw new RuntimeException("Loader not implemented: " + id);
-        }
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<List<RecipeIngredientInfo>> loader, List<RecipeIngredientInfo> data) {
-
-        if(data != null){
-            RecipeIngredientInfoList = data;
-            recipeInfoRv.setAdapter(mRecipeInfoAdapter);
-            recipeInfoRv.setHasFixedSize(true);
-            mRecipeInfoAdapter.notifyRecipeIngredientInfoChange(RecipeIngredientInfoList);
-        } else{
-            Log.v("ASYNC TASK README: ", "Baking Data is null or empty.");
-        }
-
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<List<RecipeIngredientInfo>> loader) {
-
+        //TODO: insert all Fragments in this activity
     }
 }

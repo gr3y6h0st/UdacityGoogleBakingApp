@@ -93,6 +93,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
         public void setBakingAppData(BakingData bakingAppData, int position){
             listRecipeNameTextview.setText(bakingAppData.getRecipe_name());
+
             if(bakingAppData.getRecipe_image() == 0 ){
                 mData.get(position).setRecipe_image(recipeImages[position]);
                 listImageView.setImageResource(bakingAppData.getRecipe_image());

@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".RecipeInfoActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/recipe_info_rv" />
+
+    <!--Fragment placement-->
+    <FrameLayout
+        android:id="@+id/fragment_recipe_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"/>
+
+    <FrameLayout
+        android:id="@+id/fragment_recipe_steps2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"/>
 
 
-</FrameLayout>
+
+</LinearLayout>

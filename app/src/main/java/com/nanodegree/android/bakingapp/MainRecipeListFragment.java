@@ -39,6 +39,7 @@ public class MainRecipeListFragment extends Fragment implements
     }
 
     private final String TAG = MainActivity.class.getSimpleName();
+    public static final String BAKING_DATA = "baking_data";
 
 
     private RecipesAdapter mAdapter;
@@ -51,12 +52,10 @@ public class MainRecipeListFragment extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-        /*if(savedInstanceState != null){
+        if(savedInstanceState != null){
             //check savedInstanceState bundle to obtain any current baking data
-            bakingDataList = (List<BakingData>) savedInstanceState.getSerializable(MAIN_ACTIVITY_BAKING_DATA_EXTRA);
-        } else{
-            //if null then, check to see if an argument was set in MainActivity and obtain it.
-        }*/
+            bakingDataList = (List<BakingData>) savedInstanceState.getSerializable(BAKING_DATA);
+        }
 
         //inflate MainActivity layout
         View rootView = inflater.inflate(R.layout.fragment_recipe_rv, container, false);
@@ -83,7 +82,7 @@ public class MainRecipeListFragment extends Fragment implements
     @Override
     public void onItemClick(int clickedPosition) {
 
-        Intent intentToStartRecipeInfoActivity = new Intent(getActivity(), RecipeStepsActivity.class);
+        Intent intentToStartRecipeInfoActivity = new Intent(getActivity(), RecipeInfoActivity.class);
         intentToStartRecipeInfoActivity.putExtra("RecipeData", bakingDataList.get(clickedPosition));
         startActivity(intentToStartRecipeInfoActivity);
 
@@ -125,7 +124,7 @@ public class MainRecipeListFragment extends Fragment implements
 
                             List<BakingData> simpleJsonBakingData = BakingAppDatabaseJsonUtils.getRecipeNames(jsonBakingDataResponse);
 
-                            Log.v("ASYNC TASK READ ME: ", simpleJsonBakingData.get(0).getRecipe_name());
+                            //Log.v("ASYNC TASK READ ME: ", simpleJsonBakingData.get(0).getRecipe_name());
 
                             return simpleJsonBakingData;
 
@@ -167,5 +166,10 @@ public class MainRecipeListFragment extends Fragment implements
     @Override
     public void onLoaderReset(@NonNull Loader<List<BakingData>> loader) {
 
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
+        currentState.putSerializable(BAKING_DATA, (ArrayList<BakingData>) bakingDataList);
     }
 }

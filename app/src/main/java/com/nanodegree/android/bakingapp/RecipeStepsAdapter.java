@@ -42,7 +42,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         public RecipeStepsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater
                     .from(mContext)
-                    .inflate(R.layout.recipe_info_list_item, parent, false);
+                    .inflate(R.layout.recipe_steps_list_item, parent, false);
 
             return new RecipeStepsViewHolder(view);
         }
@@ -67,9 +67,9 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         }
 
         public class RecipeStepsViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
-            @BindView(R.id.recipe_info_ingredients_tv)
+            @BindView(R.id.recipe_info_videoURL_tv)
             TextView listRecipeInfoStepsTextView;
-            @BindView(R.id.recipe_info_steps_tv)
+            @BindView(R.id.recipe_steps_desc_tv)
             TextView listRecipeInfoIngredientTextview;
 
             RecipeStepsViewHolder(View view){
@@ -85,7 +85,11 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             }
 
             public void setRecipeStepsData(RecipeSteps recipeSteps, int position){
-                listRecipeInfoIngredientTextview.setText(recipeSteps.getStep_shortdescription().toString());
+
+                //TODO:handle how to display videos in EXOPLAYER + if they don't exist.
+                listRecipeInfoIngredientTextview.setText(recipeSteps.getStep_videoURL());
+
+                //There is a repeat "Recipe Introduction" Items @ position 0.
                 listRecipeInfoStepsTextView.setText(recipeSteps.getStep_description());
             }
         }

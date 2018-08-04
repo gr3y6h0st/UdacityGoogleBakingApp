@@ -55,7 +55,7 @@ public class RecipesInfoAdapter extends RecyclerView.Adapter<RecipesInfoAdapter.
 
         Log.d(TAG, "#" + position);
 
-        //display the images here
+        //sets info
         holder.setRecipeInfoData(mData.get(position), position);
 
     }
@@ -67,9 +67,10 @@ public class RecipesInfoAdapter extends RecyclerView.Adapter<RecipesInfoAdapter.
     }
 
     public class RecipesInfoViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
+
         @BindView(R.id.recipe_info_ingredients_tv)
         TextView listRecipeInfoStepsTextView;
-        @BindView(R.id.recipe_info_steps_tv)
+        @BindView(R.id.recipe_info_steps_desc_tv)
         TextView listRecipeInfoIngredientTextview;
 
         RecipesInfoViewHolder(View view){
