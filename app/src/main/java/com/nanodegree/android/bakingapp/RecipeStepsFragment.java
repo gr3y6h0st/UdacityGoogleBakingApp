@@ -1,5 +1,6 @@
 package com.nanodegree.android.bakingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,11 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.nanodegree.android.bakingapp.BakingData.RecipeSteps;
 import com.nanodegree.android.bakingapp.Utils.BakingAppDatabaseJsonUtils;
 import com.nanodegree.android.bakingapp.Utils.NetworkUtils;
+import com.nanodegree.android.bakingapp.Utils.RecipeStepsAdapter;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +33,17 @@ public class RecipeStepsFragment extends Fragment implements
         android.support.v4.app.LoaderManager.LoaderCallbacks<List<RecipeSteps>>,
         RecipeStepsAdapter.RecipeStepsAdapterOnClickListener {
 
-    private final String TAG = RecipeStepsActivity.class.getSimpleName();
+    private final String TAG = RecipeStepsFragment.class.getSimpleName();
+    public static final String LIST_INDEX = "list_index";
+
 
     @BindView(R.id.recipe_steps_rv)
     RecyclerView recipeStepsRv;
-    private RecipeStepsAdapter mRecipeStepsAdapter;
+
+    RecipeStepsAdapter mRecipeStepsAdapter;
     public static List<RecipeSteps> RecipeStepsList = new ArrayList<>();
     int mRecipeID;
     public static final int ID_RECIPE_STEPS_LOADER = 219;
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -65,8 +71,6 @@ public class RecipeStepsFragment extends Fragment implements
         }
 
         return rootView;
-
-
 
     }
 
@@ -150,6 +154,11 @@ public class RecipeStepsFragment extends Fragment implements
 
     @Override
     public void onItemClick(int clickedPosition) {
+        Toast.makeText(getContext(), RecipeStepsList.get(clickedPosition).getStep_description(), Toast.LENGTH_SHORT).show();
+        Intent intentToStartDetailedStepsActivity = new Intent(getActivity(), DetailedRecipeStepsActivity.class);
+        intentToStartDetailedStepsActivity.putExtra("RecipeStepsData", (Serializable) RecipeStepsList);
+        intentToStartDetailedStepsActivity.putExtra("clickedPosition", clickedPosition);
 
+        startActivity(intentToStartDetailedStepsActivity);
     }
 }

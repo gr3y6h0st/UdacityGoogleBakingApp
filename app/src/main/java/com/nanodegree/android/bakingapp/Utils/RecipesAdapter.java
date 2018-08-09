@@ -1,4 +1,4 @@
-package com.nanodegree.android.bakingapp;
+package com.nanodegree.android.bakingapp.Utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nanodegree.android.bakingapp.BakingData.BakingData;
+import com.nanodegree.android.bakingapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

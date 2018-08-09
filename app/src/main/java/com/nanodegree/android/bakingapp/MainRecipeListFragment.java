@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.nanodegree.android.bakingapp.BakingData.BakingData;
 import com.nanodegree.android.bakingapp.Utils.BakingAppDatabaseJsonUtils;
 import com.nanodegree.android.bakingapp.Utils.NetworkUtils;
+import com.nanodegree.android.bakingapp.Utils.RecipesAdapter;
 
 import java.net.URL;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.nanodegree.android.bakingapp;
+package com.nanodegree.android.bakingapp.Utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nanodegree.android.bakingapp.BakingData.RecipeIngredientInfo;
+import com.nanodegree.android.bakingapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,10 +69,17 @@ public class RecipesInfoAdapter extends RecyclerView.Adapter<RecipesInfoAdapter.
 
     public class RecipesInfoViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.recipe_info_ingredients_tv)
-        TextView listRecipeInfoStepsTextView;
-        @BindView(R.id.recipe_info_steps_desc_tv)
-        TextView listRecipeInfoIngredientTextview;
+        //@BindView(R.id.recipe_info_ingredient_label_tv)
+        TextView listRecipeInfoLabelTv;
+
+        //@BindView(R.id.recipe_info_ingredient_measure_tv)
+        TextView listRecipeInfoMeasureTv;
+        @BindView(R.id.recipe_info_ingredient_quantity_tv)
+        TextView listRecipeInfoIngredientQuntityTv;
+        String quantity;
+        String measure;
+        String recipeDescription;
+
 
         RecipesInfoViewHolder(View view){
             super(view);
@@ -86,8 +94,13 @@ public class RecipesInfoAdapter extends RecyclerView.Adapter<RecipesInfoAdapter.
         }
 
         public void setRecipeInfoData(RecipeIngredientInfo recipeIngredientInfo, int position){
-            listRecipeInfoIngredientTextview.setText(recipeIngredientInfo.getIngredient_quantity().toString());
-            listRecipeInfoStepsTextView.setText(recipeIngredientInfo.getIngredient_measure());
+
+            quantity = recipeIngredientInfo.getIngredient_quantity().toString();
+            measure = recipeIngredientInfo.getIngredient_measure();
+            recipeDescription = recipeIngredientInfo.getIngredient_description();
+
+            String ingredientsFormattedText = (quantity + " " + measure + " " + recipeDescription);
+            listRecipeInfoIngredientQuntityTv.setText(ingredientsFormattedText);
         }
     }
 

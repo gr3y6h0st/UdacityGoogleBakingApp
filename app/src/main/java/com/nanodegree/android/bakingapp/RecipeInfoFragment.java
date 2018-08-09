@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.nanodegree.android.bakingapp.BakingData.RecipeIngredientInfo;
 import com.nanodegree.android.bakingapp.Utils.BakingAppDatabaseJsonUtils;
 import com.nanodegree.android.bakingapp.Utils.NetworkUtils;
+import com.nanodegree.android.bakingapp.Utils.RecipesInfoAdapter;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class RecipeInfoFragment extends Fragment implements
     int mRecipeID;
     public static List<RecipeIngredientInfo> RecipeIngredientInfoList = new ArrayList<>();
     public static final int ID_RECIPE_INFO_LOADER = 119;
+
 
 
     @Override
@@ -76,6 +78,7 @@ public class RecipeInfoFragment extends Fragment implements
 
     @Override
     public void onItemClick(int clickedPosition) {
+
 
     }
 

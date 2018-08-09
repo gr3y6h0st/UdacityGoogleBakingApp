@@ -23,6 +23,7 @@ public class RecipeInfoActivity extends AppCompatActivity {
         Intent mainActivityIntent = getIntent();
         //TODO: Pass recipeID to Fragment.
         selectedRecipeData = (BakingData) mainActivityIntent.getSerializableExtra("RecipeData");
+
         mRecipeID = selectedRecipeData.getRecipe_id();
         Bundle bundle = new Bundle();
         bundle.putInt("recipe_id", mRecipeID);

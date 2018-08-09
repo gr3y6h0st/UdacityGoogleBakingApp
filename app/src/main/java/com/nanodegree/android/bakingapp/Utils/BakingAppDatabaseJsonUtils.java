@@ -82,7 +82,7 @@ public final class BakingAppDatabaseJsonUtils {
         for (int x = 0; x < stepsArr.length(); x++) {
             JSONObject stepsInfo = stepsArr.getJSONObject(x);
             RecipeSteps specificRecipeSteps = new RecipeSteps(
-                    stepsInfo.getInt(RECIPE_ID),
+                    stepsInfo.getInt(RECIPE_STEPS_ID),
                     stepsInfo.getString(RECIPE_STEPS_SHORT_DESC),
                     stepsInfo.getString(RECIPE_STEPS_DESC),
                     stepsInfo.getString(RECIPE_STEPS_VIDEO_URL),

@@ -8,13 +8,15 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Ingredient"
+        tools:text="Video Preview Here."
+        android:padding="8dp"
         android:id="@+id/recipe_info_videoURL_tv"/>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:text="Steps"
+        android:layout_height="wrap_content"
+        tools:text="Step X"
+        android:padding="8dp"
         android:id="@+id/recipe_steps_desc_tv"/>
 
 </LinearLayout>

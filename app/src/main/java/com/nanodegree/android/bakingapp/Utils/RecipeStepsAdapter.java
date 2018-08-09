@@ -1,4 +1,4 @@
-package com.nanodegree.android.bakingapp;
+package com.nanodegree.android.bakingapp.Utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nanodegree.android.bakingapp.BakingData.RecipeSteps;
+import com.nanodegree.android.bakingapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,10 +68,10 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         }
 
         public class RecipeStepsViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
-            @BindView(R.id.recipe_info_videoURL_tv)
-            TextView listRecipeInfoStepsTextView;
+            //@BindView(R.id.recipe_info_videoURL_tv)
+            //TextView listRecipeInfoStepsTextView;
             @BindView(R.id.recipe_steps_desc_tv)
-            TextView listRecipeInfoIngredientTextview;
+            TextView listRecipeStepsDescTv;
 
             RecipeStepsViewHolder(View view){
                 super(view);
@@ -87,10 +88,8 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             public void setRecipeStepsData(RecipeSteps recipeSteps, int position){
 
                 //TODO:handle how to display videos in EXOPLAYER + if they don't exist.
-                listRecipeInfoIngredientTextview.setText(recipeSteps.getStep_videoURL());
-
-                //There is a repeat "Recipe Introduction" Items @ position 0.
-                listRecipeInfoStepsTextView.setText(recipeSteps.getStep_description());
+                listRecipeStepsDescTv.setText(recipeSteps.getStep_description());
+                //listRecipeInfoStepsTextView.setText(recipeSteps.getStep_videoURL());
             }
         }
 

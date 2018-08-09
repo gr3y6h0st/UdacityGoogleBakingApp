@@ -6,10 +6,12 @@
     android:layout_height="wrap_content">
 
     <TextView
+        android:id="@+id/recipe_main_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="@string/app_name"
-        android:id="@+id/recipe_main_tv"/>
+        android:gravity="center_horizontal"
+        android:padding="16dp"
+        tools:text="Recipe Name" />
 
     <ImageView
         android:layout_width="match_parent"
