@@ -20,13 +20,13 @@ import butterknife.ButterKnife;
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsViewHolder> {
 
-        private static final String TAG = RecipesInfoAdapter.class.getSimpleName();
+    private static final String TAG = RecipesInfoAdapter.class.getSimpleName();
 
-        Context mContext;
+    Context mContext;
 
-        private List<RecipeSteps> mData;
+    private List<RecipeSteps> mData;
 
-        final private RecipeStepsAdapterOnClickListener mOnClickListener;
+    final private RecipeStepsAdapterOnClickListener mOnClickListener;
 
     public RecipeStepsAdapter(Context context, List<RecipeSteps> recipeSteps, RecipeStepsAdapter.RecipeStepsAdapterOnClickListener listener ) {
             this.mContext = context;
@@ -57,19 +57,18 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             Log.d(TAG, "#" + position);
 
             //display the images here
+            //TODO:May need to revise this to fix duplicates
             holder.setRecipeStepsData(mData.get(position), position);
 
         }
 
         @Override
         public int getItemCount() {
-            if(null == mData) return 0;
+            if(null == mData) return 1;
             return mData.size();
         }
 
         public class RecipeStepsViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
-            //@BindView(R.id.recipe_info_videoURL_tv)
-            //TextView listRecipeInfoStepsTextView;
             @BindView(R.id.recipe_steps_desc_tv)
             TextView listRecipeStepsDescTv;
 
@@ -86,10 +85,12 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             }
 
             public void setRecipeStepsData(RecipeSteps recipeSteps, int position){
+                switch(position){
 
-                //TODO:handle how to display videos in EXOPLAYER + if they don't exist.
-                listRecipeStepsDescTv.setText(recipeSteps.getStep_description());
-                //listRecipeInfoStepsTextView.setText(recipeSteps.getStep_videoURL());
+                    default:
+                        listRecipeStepsDescTv.setText(recipeSteps.getStep_shortdescription());
+                        break;
+                }
             }
         }
 

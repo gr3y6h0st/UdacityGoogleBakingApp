@@ -28,7 +28,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
     //TODO: create a data source that can be declared here ex.public List<BakingData> mData;
     private List<BakingData> mData;
 
-    final private RecipesAdapterOnClickListener mOnClickListener;
+    RecipesAdapterOnClickListener mOnClickListener;
 
     //TODO: upload and create drawableIDs for the 4 recipes (Nutella Pie, Brownies, Yellow Cake, Cheese Cake)
     private int[] recipeImages = {R.drawable.cheesecake_stock, R.drawable.cheesecake_stock,

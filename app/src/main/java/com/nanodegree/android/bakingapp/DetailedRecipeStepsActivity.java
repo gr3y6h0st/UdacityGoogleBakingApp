@@ -12,7 +12,7 @@ import java.util.List;
 
 public class DetailedRecipeStepsActivity extends AppCompatActivity {
     private final String TAG = DetailedRecipeStepsActivity.class.getSimpleName();
-    List<RecipeSteps> RecipeStepsData;
+    List<RecipeSteps> recipeStepsData;
     int mPosition;
 
 
@@ -29,14 +29,14 @@ public class DetailedRecipeStepsActivity extends AppCompatActivity {
 
             Intent RecipeStepsFragmentIntent = getIntent();
             //TODO: Pass recipeID to Fragment.
-            RecipeStepsData = (List<RecipeSteps>) RecipeStepsFragmentIntent.getSerializableExtra("RecipeStepsData");
+            recipeStepsData = (List<RecipeSteps>) RecipeStepsFragmentIntent.getSerializableExtra("RecipeStepsData");
 
             mPosition = RecipeStepsFragmentIntent.getIntExtra("clickedPosition", mPosition);
             detailedRecipeStepsFragment.setStepPosition(mPosition);
 
             Bundle bundle = new Bundle();
             bundle.putInt("recipe_id", mPosition);
-            bundle.putSerializable("recipeSteps", (Serializable) RecipeStepsData);
+            bundle.putSerializable("recipeSteps", (Serializable) recipeStepsData);
 
             //set bundle as argument on fragment obj
             detailedRecipeStepsFragment.setArguments(bundle);

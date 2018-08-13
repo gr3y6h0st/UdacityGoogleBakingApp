@@ -2,6 +2,7 @@ package com.nanodegree.android.bakingapp;
 
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,19 +30,25 @@ import butterknife.ButterKnife;
 
 
 public class RecipeInfoFragment extends Fragment implements
-        RecipesInfoAdapter.RecipesInfoAdapterOnClickListener,
         LoaderManager.LoaderCallbacks<List<RecipeIngredientInfo>>{
+
+
+    private String mRecipeName;
 
     public RecipeInfoFragment(){
 
     }
 
-    private final String TAG = MainActivity.class.getSimpleName();
+    private final String TAG = RecipeInfoFragment.class.getSimpleName();
     @BindView(R.id.recipe_info_rv)
     RecyclerView recipeInfoRv;
+    RecyclerView.LayoutManager mLayoutManager;
     private RecipesInfoAdapter mRecipeInfoAdapter;
-    int mRecipeID;
+    private Parcelable mPosition;
+    private int mRecipeID;
     public static List<RecipeIngredientInfo> RecipeIngredientInfoList = new ArrayList<>();
+    public static final String RECIPE_INFO_DATA = "RecipeIngredientInfoList";
+    private static final String RVPOSITION = "recipeInfoRv";
     public static final int ID_RECIPE_INFO_LOADER = 119;
 
 
@@ -58,28 +65,28 @@ public class RecipeInfoFragment extends Fragment implements
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        if(savedInstanceState != null){
+            //check savedInstanceState bundle to obtain any current baking data
+            RecipeIngredientInfoList = (List<RecipeIngredientInfo>) savedInstanceState.getSerializable(RECIPE_INFO_DATA);
+            mPosition = savedInstanceState.getParcelable(RVPOSITION);
+        }
+
         //inflate MainActivity layout and bind ButterKnife using rootView
         View rootView = inflater.inflate(R.layout.fragment_recipe_info, container, false);
         ButterKnife.bind(this, rootView);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recipeInfoRv.setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recipeInfoRv.setLayoutManager(mLayoutManager);
         recipeInfoRv.setHasFixedSize(true);
 
-        //TODO:UNLOAD RECIPE ID/POSITION and USE In ASYNCTASK call to Util Class
         if (getArguments() != null){
             mRecipeID = getArguments().getInt("recipe_id");
+            Log.v(TAG, "RECEIVED!" + mRecipeID);
         } else{
             Log.v(TAG, "Error Receiving bundle from RecipeInfoActivity. Bundle may be null.");
         }
 
         return rootView;
-    }
-
-    @Override
-    public void onItemClick(int clickedPosition) {
-
-
     }
 
     @NonNull
@@ -101,7 +108,7 @@ public class RecipeInfoFragment extends Fragment implements
                             System.out.println("BAKING DATA! delivering RECIPE INFO!");
                         } else {
                             forceLoad();
-                            System.out.println("BAKING DATA forceloading.");
+                            System.out.println("RECIPE INFO DATA forceloading.");
                         }
                     }
 
@@ -141,12 +148,14 @@ public class RecipeInfoFragment extends Fragment implements
         if(data != null){
             RecipeIngredientInfoList = data;
             //TODO: Declare and set a RecyclerViewAdapter
-            mRecipeInfoAdapter = new RecipesInfoAdapter(getContext(), RecipeIngredientInfoList, this);
+            mRecipeInfoAdapter = new RecipesInfoAdapter(getContext(), RecipeIngredientInfoList);
             recipeInfoRv.setAdapter(mRecipeInfoAdapter);
             recipeInfoRv.setHasFixedSize(true);
+            mLayoutManager.onRestoreInstanceState(mPosition);
+
             mRecipeInfoAdapter.notifyRecipeIngredientInfoChange(RecipeIngredientInfoList);
         } else{
-            Log.v("ASYNC TASK README: ", "Baking Data is null or empty.");
+            Log.v("ASYNC TASK README: ", "RecipeIngredientInfo is null or empty.");
 
             //TODO: load this fragment as the top of RecipeInfoActivity.
         }
@@ -155,5 +164,24 @@ public class RecipeInfoFragment extends Fragment implements
     @Override
     public void onLoaderReset(@NonNull Loader<List<RecipeIngredientInfo>> loader) {
 
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
+        currentState.putSerializable(RECIPE_INFO_DATA, (ArrayList<RecipeIngredientInfo>) RecipeIngredientInfoList);
+        mPosition = ((LinearLayoutManager) recipeInfoRv.getLayoutManager()).onSaveInstanceState();
+        currentState.putParcelable(RVPOSITION, mPosition);
+
+        //Debug purposes.
+        String savedAdapterPosition = mLayoutManager.onSaveInstanceState().toString();
+        Log.v(TAG, savedAdapterPosition);
+    }
+
+    public void setRecipeId(int recipeId){
+        mRecipeID = recipeId;
+    }
+
+    public void setRecipeName(String recipeName){
+        mRecipeName = recipeName;
     }
 }

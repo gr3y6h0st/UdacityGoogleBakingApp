@@ -7,4 +7,51 @@
     tools:context="com.nanodegree.android.bakingapp.MainActivity">
 
 
+    <!--Main Recipe List -->
+    <FrameLayout
+        android:id="@+id/fragment_main_recipe_list"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:scaleType="centerInside"/>
+    
+    <View
+        android:id="@+id/vertical_main_divider"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:id="@+id/recipe_info_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <!--RecipeInfo Fragment placement-->
+        <FrameLayout
+            android:id="@+id/fragment_recipe_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"/>
+
+        <!--Horizontal Divider -->
+        <View
+            android:id="@+id/horizontal_main_divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"/>
+
+
+        <!--RecipeSteps Fragment placement-->
+        <FrameLayout
+            android:id="@+id/fragment_recipe_steps2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"/>
+
+    </LinearLayout>
+
+
 </LinearLayout>

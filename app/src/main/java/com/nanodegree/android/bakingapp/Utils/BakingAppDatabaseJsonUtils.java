@@ -52,12 +52,10 @@ public final class BakingAppDatabaseJsonUtils {
         return recipeName;
     }
 
-    //TODO: Find a way to sort out the ingredients by recipe. (Currently displays all results).
-
     public static List<RecipeIngredientInfo> getRecipeIngredients(String json, int recipeId) throws JSONException {
         JSONArray recipeList = new JSONArray(json);
         List<RecipeIngredientInfo> recipeIngredients = new ArrayList<RecipeIngredientInfo>();
-        JSONObject recipeObj = recipeList.getJSONObject(recipeId - 1);
+        JSONObject recipeObj = recipeList.getJSONObject(recipeId);
         JSONArray ingredientsArr = recipeObj.getJSONArray(RECIPE_INGREDIENTS);
 
         for(int x = 0; x < ingredientsArr.length(); x++){
@@ -76,7 +74,7 @@ public final class BakingAppDatabaseJsonUtils {
     public static List<RecipeSteps> getRecipeSteps(String json, int recipeId) throws JSONException {
         JSONArray recipeList = new JSONArray(json);
         List<RecipeSteps> recipeSteps = new ArrayList<RecipeSteps>();
-        JSONObject recipeObj = recipeList.getJSONObject(recipeId - 1);
+        JSONObject recipeObj = recipeList.getJSONObject(recipeId);
         JSONArray stepsArr = recipeObj.getJSONArray(RECIPE_STEPS);
 
         for (int x = 0; x < stepsArr.length(); x++) {

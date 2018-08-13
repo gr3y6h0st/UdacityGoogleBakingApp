@@ -1,7 +1,8 @@
 package com.nanodegree.android.bakingapp;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -45,36 +46,52 @@ public class MainRecipeListFragment extends Fragment implements
 
     private RecipesAdapter mAdapter;
     private RecyclerView recyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
+    private Parcelable mPosition;
+    public static final String RVPOSITION = "RecyclerView Position";
     public static List<BakingData> bakingDataList = new ArrayList<>();
     public static final int ID_BAKING_LOADER = 20;
+
+    OnRecipeClickListener mCallback;
+
+    public interface OnRecipeClickListener {
+        void onRecipeSelected(int position, List<BakingData> bakingDataList);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        //makes sure HOST activity has implemented call back interface, throws exception if not.
+        try{
+            mCallback = (OnRecipeClickListener) context;
+        } catch (ClassCastException e){
+            throw new ClassCastException(getContext().toString()
+                    + " must implement OnRecipeClickListener");
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-
-        if(savedInstanceState != null){
-            //check savedInstanceState bundle to obtain any current baking data
+        //check if savedInstanceState is not null. Restore extract restoreSavedState if it exists and is not null.
+        //logs error if attempt to restoredSavedState is null.
+        if (savedInstanceState != null) {
+            //sets data/position to their previous state after rotation event
             bakingDataList = (List<BakingData>) savedInstanceState.getSerializable(BAKING_DATA);
+            mPosition = savedInstanceState.getParcelable(RVPOSITION);
         }
 
         //inflate MainActivity layout
         View rootView = inflater.inflate(R.layout.fragment_recipe_rv, container, false);
 
-        //bakingDataList = (List<BakingData>) getArguments().getSerializable(MAIN_ACTIVITY_BAKING_DATA_EXTRA);
-
-
         //get reference to RecylerView in fragment layout.
         recyclerView = rootView.findViewById(R.id.recipe_main_frag_rv);
 
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLinearLayoutManager);
 
         //TODO: Obtain Bundle from MainActivity. Should hold an ArrayList of data pertaining to current recipe.
-
-
-        //TODO: Declare and set a RecyclerViewAdapter
-        //mAdapter = new RecipesAdapter(getActivity(), bakingDataList, this);
-        //recyclerView.setAdapter(mAdapter);
-
         LoaderManager.enableDebugLogging(true);
 
         return rootView;
@@ -83,9 +100,11 @@ public class MainRecipeListFragment extends Fragment implements
     @Override
     public void onItemClick(int clickedPosition) {
 
-        Intent intentToStartRecipeInfoActivity = new Intent(getActivity(), RecipeInfoActivity.class);
-        intentToStartRecipeInfoActivity.putExtra("RecipeData", bakingDataList.get(clickedPosition));
-        startActivity(intentToStartRecipeInfoActivity);
+        if(bakingDataList != null){
+            mCallback.onRecipeSelected(clickedPosition, bakingDataList);
+        } else{
+            Log.v(TAG, "Check to make sure Baking Data isn't null/empty.");
+        }
 
     }
 
@@ -151,12 +170,15 @@ public class MainRecipeListFragment extends Fragment implements
     public void onLoadFinished(@NonNull Loader<List<BakingData>> loader, List<BakingData> data) {
 
         if(data != null){
+            //populate global List variable for use.
             bakingDataList = data;
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(linearLayoutManager);
+
             recyclerView.setHasFixedSize(true);
             mAdapter = new RecipesAdapter(getContext(), bakingDataList, this);
             recyclerView.setAdapter(mAdapter);
+
+            //restore position on List
+            mLinearLayoutManager.onRestoreInstanceState(mPosition);
             mAdapter.notifyBakingDataChange(data);
         } else{
             Log.v("ASYNC TASK README: ", "Baking Data is null or empty.");
@@ -171,6 +193,13 @@ public class MainRecipeListFragment extends Fragment implements
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle currentState) {
+
         currentState.putSerializable(BAKING_DATA, (ArrayList<BakingData>) bakingDataList);
+        mPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).onSaveInstanceState();
+        currentState.putParcelable(RVPOSITION, mPosition);
+
+
+        String savedAdapterPosition = mLinearLayoutManager.onSaveInstanceState().toString();
+        Log.v(TAG, savedAdapterPosition);
     }
 }

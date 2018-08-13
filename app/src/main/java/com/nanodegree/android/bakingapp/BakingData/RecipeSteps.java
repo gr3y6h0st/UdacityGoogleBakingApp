@@ -63,11 +63,11 @@ public class RecipeSteps implements Serializable {
         this.step_videoURL = step_videoURL;
     }
 
-    public String getStep_thumnailURL() {
+    public String getStep_thumbnailURL() {
         return step_thumnailURL;
     }
 
-    public void setStep_thumnailURL(String step_thumnailURL) {
+    public void setStep_thumbnailURL(String step_thumnailURL) {
         this.step_thumnailURL = step_thumnailURL;
     }
 }

@@ -26,16 +26,9 @@ public class RecipesInfoAdapter extends RecyclerView.Adapter<RecipesInfoAdapter.
 
     private List<RecipeIngredientInfo> mData;
 
-    final private RecipesInfoAdapterOnClickListener mOnClickListener;
-
-    public RecipesInfoAdapter(Context context, List<RecipeIngredientInfo> recipeIngredientInfo, RecipesInfoAdapterOnClickListener listener ) {
+    public RecipesInfoAdapter(Context context, List<RecipeIngredientInfo> recipeIngredientInfo) {
         this.mContext = context;
         this.mData = recipeIngredientInfo;
-        this.mOnClickListener = listener;
-    }
-
-    public interface RecipesInfoAdapterOnClickListener {
-        void onItemClick(int clickedPosition);
     }
 
     @NonNull
@@ -69,13 +62,9 @@ public class RecipesInfoAdapter extends RecyclerView.Adapter<RecipesInfoAdapter.
 
     public class RecipesInfoViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
 
-        //@BindView(R.id.recipe_info_ingredient_label_tv)
-        TextView listRecipeInfoLabelTv;
-
-        //@BindView(R.id.recipe_info_ingredient_measure_tv)
-        TextView listRecipeInfoMeasureTv;
         @BindView(R.id.recipe_info_ingredient_quantity_tv)
         TextView listRecipeInfoIngredientQuntityTv;
+
         String quantity;
         String measure;
         String recipeDescription;
@@ -89,7 +78,6 @@ public class RecipesInfoAdapter extends RecyclerView.Adapter<RecipesInfoAdapter.
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
-            mOnClickListener.onItemClick(clickedPosition);
 
         }
 
