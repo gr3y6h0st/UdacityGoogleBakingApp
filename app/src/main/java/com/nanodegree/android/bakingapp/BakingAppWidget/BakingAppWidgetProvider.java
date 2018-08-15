@@ -1,4 +1,4 @@
-package com.nanodegree.android.bakingapp.Utils;
+package com.nanodegree.android.bakingapp.BakingAppWidget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
