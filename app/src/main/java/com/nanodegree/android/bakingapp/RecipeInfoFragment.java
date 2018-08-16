@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nanodegree.android.bakingapp.BakingAppWidget.BakingAppWidgetProvider;
 import com.nanodegree.android.bakingapp.BakingData.RecipeIngredientInfo;
 import com.nanodegree.android.bakingapp.Utils.BakingAppDatabaseJsonUtils;
 import com.nanodegree.android.bakingapp.Utils.NetworkUtils;
@@ -154,6 +155,10 @@ public class RecipeInfoFragment extends Fragment implements
             mLayoutManager.onRestoreInstanceState(mPosition);
 
             mRecipeInfoAdapter.notifyRecipeIngredientInfoChange(RecipeIngredientInfoList);
+
+            BakingAppDatabaseJsonUtils.getRecipeIngredientsCvData(getContext(), RecipeIngredientInfoList);
+
+            BakingAppWidgetProvider.sendRefreshBroadcast(getContext());
         } else{
             Log.v("ASYNC TASK README: ", "RecipeIngredientInfo is null or empty.");
 

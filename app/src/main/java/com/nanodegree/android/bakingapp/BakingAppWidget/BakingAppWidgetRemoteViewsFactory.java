@@ -2,12 +2,20 @@ package com.nanodegree.android.bakingapp.BakingAppWidget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Binder;
+import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-public class BakingAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory
+import com.nanodegree.android.bakingapp.BakingData.BakingDataContract;
+import com.nanodegree.android.bakingapp.R;
+
+public class BakingAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     private Context mContext;
+    private Cursor mCursor;
 
     public BakingAppWidgetRemoteViewsFactory(Context context, Intent intent){
         mContext = context;
@@ -20,21 +28,46 @@ public class BakingAppWidgetRemoteViewsFactory implements RemoteViewsService.Rem
     @Override
     public void onDataSetChanged() {
 
+        if(mCursor != null){
+            mCursor.close();
+        }
+
+        final long identityToken = Binder.clearCallingIdentity();
+        Uri uri = BakingDataContract.CONTENT_URI; //TODO: set this to the Contract + Ingredients path;
+
+        mCursor = mContext.getContentResolver().query(uri,
+                null,
+                null,
+                null,
+                null);
+
+        Binder.restoreCallingIdentity(identityToken);
+
     }
 
     @Override
     public void onDestroy() {
+        if(mCursor != null){
+            mCursor.close();
+        }
 
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return mCursor == null ? 0: mCursor.getCount();
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-        return null;
+        if(position == AdapterView.INVALID_POSITION || mCursor == null ||
+                !mCursor.moveToPosition(position)){
+            return null;
+        }
+
+        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.baking_app_widget_list_item);
+        rv.setTextViewText(R.id.widgetItemTaskNameLabel, mCursor.getString(0) + " " + mCursor.getString(1) + " " + mCursor.getString(2));
+        return rv;
     }
 
     @Override
@@ -44,16 +77,16 @@ public class BakingAppWidgetRemoteViewsFactory implements RemoteViewsService.Rem
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return mCursor.move(position) ? mCursor.getLong(0): position;
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 }

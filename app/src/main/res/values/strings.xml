@@ -8,6 +8,6 @@
     <string name="recipe_introduction">Recipe Introduction</string>
     <string name="prev_step_button_txt">Previous</string>
     <string name="next_bttn_end_back_to_intro">Back to Intro</string>
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="appwidget_text">EXAMPLE TITLE</string>
     <string name="add_widget">Add widget</string>
 </resources>

@@ -1,8 +1,13 @@
 package com.nanodegree.android.bakingapp.Utils;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.nanodegree.android.bakingapp.BakingData.BakingData;
+import com.nanodegree.android.bakingapp.BakingData.BakingDataContract;
+import com.nanodegree.android.bakingapp.BakingData.BakingDataDbHelper;
 import com.nanodegree.android.bakingapp.BakingData.RecipeIngredientInfo;
 import com.nanodegree.android.bakingapp.BakingData.RecipeSteps;
 
@@ -69,6 +74,28 @@ public final class BakingAppDatabaseJsonUtils {
         }
         Log.v(TAG, recipeIngredients.toString());
         return recipeIngredients;
+    }
+
+    public static void getRecipeIngredientsCvData (Context context, List<RecipeIngredientInfo> ingredientInfo){
+
+        BakingDataDbHelper bakingDataDbHelper = new BakingDataDbHelper(context);
+        SQLiteDatabase mDb = bakingDataDbHelper.getWritableDatabase();
+        mDb.delete(BakingDataContract.TABLE_NAME, null, null);
+
+        for(int i = 0; i < ingredientInfo.size(); i++){
+            String ingredient_description = ingredientInfo.get(i).getIngredient_description();
+            Double ingredient_quantity = ingredientInfo.get(i).getIngredient_quantity();
+            String ingredient_measure = ingredientInfo.get(i).getIngredient_measure();
+
+
+            ContentValues recipeIngredientData = new ContentValues();
+            recipeIngredientData.put(BakingDataContract.COLUMN_INGREDIENT_DESCRIPTION, ingredient_description);
+            recipeIngredientData.put(BakingDataContract.COLUMN_INGREDIENT_MEASURE, ingredient_measure);
+            recipeIngredientData.put(BakingDataContract.COLUMN_INGREDIENT_QUANTITY, ingredient_quantity);
+
+
+            long rowCount = mDb.insert(BakingDataContract.TABLE_NAME, null, recipeIngredientData);
+        }
     }
 
     public static List<RecipeSteps> getRecipeSteps(String json, int recipeId) throws JSONException {

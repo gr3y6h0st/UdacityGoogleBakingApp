@@ -3,10 +3,13 @@ package com.nanodegree.android.bakingapp.BakingAppWidget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.widget.RemoteViews;
 
+import com.nanodegree.android.bakingapp.BakingData.BakingDataContract;
 import com.nanodegree.android.bakingapp.R;
 import com.nanodegree.android.bakingapp.RecipeInfoActivity;
 
@@ -21,14 +24,33 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
-        views.setTextViewText(R.id.baking_app_widget_text, widgetText);
+        views.setTextViewText(R.id.baking_app_widget_title, widgetText);
 
         //creates Intent to launch RecipeInfoActivity when clicked.
-        Intent intent = new Intent(context, RecipeInfoActivity.class);
+        Intent RecipeInfointent = new Intent(context, RecipeInfoActivity.class);
+
+        //creates Intent to launch RemoteViewService
+        Intent remoteViewServiceIntent = new Intent (context, BakingAppWidgetRemoteViewsService.class);
+        //set Adapter using intent above
+        views.setRemoteAdapter(R.id.bakingAppListView, remoteViewServiceIntent);
+
         //creates PendingIntent required to wrap the Intent above
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, RecipeInfointent, 0);
         //Widgets allow click handlers to only launch pending intents
-        views.setOnClickPendingIntent(R.id.baking_app_widget_text, pendingIntent);
+        views.setOnClickPendingIntent(R.id.baking_app_widget_title, pendingIntent);
+
+
+        Cursor cursor = context.getContentResolver().query(
+                BakingDataContract.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        cursor.moveToFirst();
+
+
+        views.setTextViewText(R.id.widgetItemTaskNameLabel, cursor.getString(1));
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -39,7 +61,29 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
+
         }
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        final String action = intent.getAction();
+
+        if(action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)){
+
+            //refresh all widgets
+            AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+            ComponentName componentName = new ComponentName(context,
+                    BakingAppWidgetProvider.class);
+            mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(componentName), R.id.bakingAppListView);
+        }
+        super.onReceive(context, intent);
+    }
+
+    public static void sendRefreshBroadcast(Context context){
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.setComponent(new ComponentName(context, BakingAppWidgetProvider.class));
+        context.sendBroadcast(intent);
     }
 
     @Override
