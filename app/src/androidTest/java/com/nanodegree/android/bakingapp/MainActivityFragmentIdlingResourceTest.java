@@ -47,8 +47,7 @@ public class MainActivityFragmentIdlingResourceTest {
     public void loadMainRecipeListTv() {
         onView(ViewMatchers.withId(R.id.recipe_main_frag_rv))
                 .perform(RecyclerViewActions.scrollToPosition(0));
-        onView(withText("" +
-                "Nutella")).check(matches(isDisplayed()));
+        onView(withText("Nutella")).check(matches(isDisplayed()));
 
         //onView(withId(R.id.recipe_main_tv))
         //.check(matches(withText(startsWith("N"))));
