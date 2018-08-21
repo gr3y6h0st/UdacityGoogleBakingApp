@@ -7,14 +7,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.nanodegree.android.bakingapp.BakingAppWidget.BakingAppWidgetProvider;
 import com.nanodegree.android.bakingapp.BakingData.BakingData;
@@ -64,6 +67,18 @@ public class RecipeInfoFragment extends Fragment implements
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if( id == android.R.id.home) {
+            Toast.makeText(getContext(), "Back/Home", Toast.LENGTH_SHORT).show();
+            NavUtils.navigateUpFromSameTask(getActivity());
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -85,7 +100,7 @@ public class RecipeInfoFragment extends Fragment implements
         if (getArguments() != null){
             mRecipeID = getArguments().getInt("recipe_id");
             mRecipeName = getArguments().getString("recipe_name");
-            Log.v(TAG, "RECEIVED!" + mRecipeID + mRecipeName);
+            Log.v(TAG, "RECEIVED! " + mRecipeID + mRecipeName);
         } else{
             Log.v(TAG, "Error Receiving bundle from RecipeInfoActivity. Bundle may be null.");
         }

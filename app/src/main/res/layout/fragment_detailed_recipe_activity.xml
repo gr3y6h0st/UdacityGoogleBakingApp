@@ -17,7 +17,7 @@
         android:id="@+id/detail_steps_tv"
         android:layout_below="@+id/recipeStepPlayerView"
         android:padding="16dp"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="@string/hello_blank_fragment" />

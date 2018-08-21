@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class BakingDataDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 21;
     private static final String DATABASE_NAME = "recipe_ingredients.db";
 
     public BakingDataDbHelper(Context context) {

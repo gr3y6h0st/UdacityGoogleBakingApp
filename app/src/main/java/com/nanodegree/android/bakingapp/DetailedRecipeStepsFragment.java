@@ -307,6 +307,14 @@ public class DetailedRecipeStepsFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        //will stop player from running in background if navigating away from this Activity
+        releasePlayer();
+    }
+
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle currentState) {
 
         currentState.putSerializable(RECIPE_DETAILED_STEPS, (ArrayList<RecipeSteps>) recipeSteps);

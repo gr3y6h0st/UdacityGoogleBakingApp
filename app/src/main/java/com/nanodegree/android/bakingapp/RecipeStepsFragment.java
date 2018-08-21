@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nanodegree.android.bakingapp.BakingData.BakingData;
 import com.nanodegree.android.bakingapp.BakingData.RecipeSteps;
@@ -178,7 +177,7 @@ public class RecipeStepsFragment extends Fragment implements
     @Override
     public void onItemClick(int clickedPosition) {
 
-        Toast.makeText(getContext(), recipeStepsList.get(clickedPosition).getStep_description(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), recipeStepsList.get(clickedPosition).getStep_description(), Toast.LENGTH_SHORT).show();
         Intent intentToStartDetailedStepsActivity = new Intent(getActivity(), DetailedRecipeStepsActivity.class);
         intentToStartDetailedStepsActivity.putExtra("RecipeStepsData", (Serializable) recipeStepsList);
         intentToStartDetailedStepsActivity.putExtra("clickedPosition", clickedPosition);

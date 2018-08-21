@@ -3,7 +3,10 @@ package com.nanodegree.android.bakingapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.nanodegree.android.bakingapp.BakingData.RecipeSteps;
 
@@ -46,5 +49,15 @@ public class DetailedRecipeStepsActivity extends AppCompatActivity {
                     .add(R.id.fragment_detailed_recipe_steps, detailedRecipeStepsFragment)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if( id == android.R.id.home) {
+            Toast.makeText(this, "Back/Home", Toast.LENGTH_SHORT).show();
+            NavUtils.navigateUpFromSameTask(this);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

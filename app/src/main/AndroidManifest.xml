@@ -21,10 +21,19 @@
             </intent-filter>
         </activity>
         <activity android:name=".RecipeInfoActivity"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
         <activity android:name=".DetailedRecipeStepsActivity"
             android:launchMode="singleTop"
+            android:parentActivityName=".RecipeInfoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".RecipeInfoActivity"/>
         </activity>
 
         <receiver android:name=".BakingAppWidget.BakingAppWidgetProvider">

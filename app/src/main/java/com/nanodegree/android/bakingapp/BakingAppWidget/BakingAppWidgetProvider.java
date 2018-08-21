@@ -45,8 +45,6 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
 
             //columnIndex 3 should be the RecipeName column in data table.
             views.setTextViewText(R.id.baking_app_widget_title, cursor.getString(3));
-            bundle.putString("recipeName", cursor.getString(3));
-            bundle.putString("recipeID", cursor.getString(4));
 
 
             //Log.v("TEST VALUE", cursor.getString(3));
@@ -56,15 +54,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
             cursor.close();
         }
 
-        //creates Intent to launch RecipeInfoActivity when clicked.
-        Intent RecipeInfoIntent = new Intent(context, RecipeInfoActivity.class);
-        //TODO:try putting in extras in recipeInfoIntent using ContentProvider data
 
-        RecipeInfoIntent.putExtras(bundle);
-        //creates PendingIntent required to wrap the RecipeInfoIntent above
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, RecipeInfoIntent, 0);
-        //Widgets allow click handlers to only launch pending intents
-        views.setOnClickPendingIntent(R.id.baking_app_widget_title, pendingIntent);
 
         //creates Intent to launch RemoteViewService
         Intent remoteViewServiceIntent = new Intent (context, BakingAppWidgetRemoteViewsService.class);

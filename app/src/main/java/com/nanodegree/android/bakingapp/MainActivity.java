@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
 import com.nanodegree.android.bakingapp.BakingData.BakingData;
 
@@ -80,8 +79,7 @@ public class MainActivity extends AppCompatActivity implements MainRecipeListFra
 
     @Override
     public void onRecipeSelected(int position, List<BakingData> bakingDataList) {
-        Toast.makeText(this, "Position # = " + position, Toast.LENGTH_SHORT).show();
-        //Per baking data source, recipeIDs start @ 1 not 0, which is why we add + 1 to position.
+        /*Toast.makeText(this, "Position # = " + position, Toast.LENGTH_SHORT).show();*/
         mRecipeID = position;
         mRecipeName = bakingDataList.get(position).getRecipe_name();
 

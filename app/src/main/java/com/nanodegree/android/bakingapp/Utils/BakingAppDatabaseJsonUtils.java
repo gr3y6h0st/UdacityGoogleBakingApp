@@ -91,12 +91,12 @@ public final class BakingAppDatabaseJsonUtils {
             Double ingredient_quantity = ingredientInfo.get(i).getIngredient_quantity();
             String ingredient_measure = ingredientInfo.get(i).getIngredient_measure();
 
-            //TODO:Find way to add recipeName here.
             ContentValues recipeIngredientData = new ContentValues();
             recipeIngredientData.put(BakingDataContract.COLUMN_INGREDIENT_DESCRIPTION, ingredient_description);
             recipeIngredientData.put(BakingDataContract.COLUMN_INGREDIENT_MEASURE, ingredient_measure);
             recipeIngredientData.put(BakingDataContract.COLUMN_INGREDIENT_QUANTITY, ingredient_quantity);
             recipeIngredientData.put(BakingDataContract.COLUMN_RECIPE_NAME, recipeName);
+            recipeIngredientData.put(BakingDataContract.COLUMN_RECIPE_ID, recipeId);
 
 
             long rowCount = mDb.insert(BakingDataContract.TABLE_NAME, null, recipeIngredientData);

@@ -3,6 +3,7 @@ package com.nanodegree.android.bakingapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -22,6 +23,13 @@ public class RecipeInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe__information);
 
+        //create ActionBar
+        ActionBar actionBar = this.getSupportActionBar();
+
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         if(savedInstanceState == null) {
 
             //create FragmentManager and new reference to Fragment.
@@ -34,9 +42,15 @@ public class RecipeInfoActivity extends AppCompatActivity {
             Intent mainActivityIntent = getIntent();
             //gets BakingData from MA.
             selectedRecipeData = (List<BakingData>)mainActivityIntent.getSerializableExtra("RecipeData");
+            Bundle bundleExtra = mainActivityIntent.getExtras();
             //get recipeID.
-            mRecipeID = mainActivityIntent.getIntExtra("recipeID", mRecipeID);
-            Log.v("TESTING RECIPE ID #: ", String.valueOf(mRecipeID));
+            if (bundleExtra != null){
+                mRecipeID = bundleExtra.getInt("recipeID", 0);
+                Log.v("TESTING RECIPE ID #: ", String.valueOf(mRecipeID));
+            } else {
+                Log.v("BUNDLE EXTRA NULL: ", "CHECK INTENT BUNDLE.");
+            }
+
 
             //get and set title to current Activity
             mRecipeName = mainActivityIntent.getStringExtra("recipeName");
