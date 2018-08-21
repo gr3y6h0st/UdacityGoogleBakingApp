@@ -33,8 +33,11 @@ public class BakingAppWidgetRemoteViewsFactory implements RemoteViewsService.Rem
         }
 
         final long identityToken = Binder.clearCallingIdentity();
-        Uri uri = BakingDataContract.CONTENT_URI; //TODO: set this to the Contract + Ingredients path;
 
+        //set uri to the CONTENT URI;
+        Uri uri = BakingDataContract.CONTENT_URI;
+
+        //query all data in table
         mCursor = mContext.getContentResolver().query(uri,
                 null,
                 null,
@@ -48,6 +51,7 @@ public class BakingAppWidgetRemoteViewsFactory implements RemoteViewsService.Rem
     @Override
     public void onDestroy() {
         if(mCursor != null){
+            //close cursor
             mCursor.close();
         }
 
@@ -55,19 +59,34 @@ public class BakingAppWidgetRemoteViewsFactory implements RemoteViewsService.Rem
 
     @Override
     public int getCount() {
-        return mCursor == null ? 0: mCursor.getCount();
+        if(mCursor == null) {
+            return 0;
+        }
+        else {
+            return mCursor.getCount();
+        }
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-        if(position == AdapterView.INVALID_POSITION || mCursor == null ||
+        if(position == AdapterView.INVALID_POSITION ||
+                mCursor == null ||
                 !mCursor.moveToPosition(position)){
             return null;
         }
 
-        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.baking_app_widget_list_item);
-        rv.setTextViewText(R.id.widgetItemTaskNameLabel, mCursor.getString(0) + " " + mCursor.getString(1) + " " + mCursor.getString(2));
-        return rv;
+        //recreation of RemoteViews using widget List Item layout.
+        RemoteViews listItemRv = new RemoteViews(mContext.getPackageName(), R.layout.baking_app_widget_list_item);
+        //set the text on the List Item TextView.
+        listItemRv.setTextViewText(R.id.baking_app_widget_item_tv, mCursor.getString(0) + " "
+                + mCursor.getString(1) + " "
+                + mCursor.getString(2));
+
+        // Construct the RemoteViews object
+        /*RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.baking_app_widget);
+        views.setTextViewText(R.id.baking_app_widget_title, mCursor.getString(3));*/
+
+        return listItemRv;
     }
 
     @Override
@@ -82,7 +101,11 @@ public class BakingAppWidgetRemoteViewsFactory implements RemoteViewsService.Rem
 
     @Override
     public long getItemId(int position) {
-        return mCursor.move(position) ? mCursor.getLong(0): position;
+         if(mCursor.move(position)){
+             return mCursor.getLong(0);
+        } else {
+             return position;
+         }
     }
 
     @Override

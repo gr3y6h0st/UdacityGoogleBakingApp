@@ -20,4 +20,6 @@ public class BakingDataContract implements BaseColumns {
     public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
             .appendPath(PATH_RECIPES)
             .build();
+    public static final String COLUMN_RECIPE_NAME = "recipeName";
+    public static final String COLUMN_RECIPE_ID = "recipeId";
 }

@@ -31,8 +31,8 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
     RecipesAdapterOnClickListener mOnClickListener;
 
     //TODO: upload and create drawableIDs for the 4 recipes (Nutella Pie, Brownies, Yellow Cake, Cheese Cake)
-    private int[] recipeImages = {R.drawable.cheesecake_stock, R.drawable.cheesecake_stock,
-            R.drawable.cheesecake_stock, R.drawable.cheesecake_stock};
+    private int[] recipeImages = {R.drawable.nutella_pie, R.drawable.brownies,
+            R.drawable.yellow_cake, R.drawable.cheesecake_stock};
 
 
     public RecipesAdapter(Context context, List<BakingData> bakingData, RecipesAdapterOnClickListener listener ) {

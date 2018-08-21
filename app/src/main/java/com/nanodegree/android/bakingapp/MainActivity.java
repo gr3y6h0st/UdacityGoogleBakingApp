@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MainRecipeListFra
     @BindView(R.id.vertical_main_divider)
     View verticalDiv;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,28 +55,14 @@ public class MainActivity extends AppCompatActivity implements MainRecipeListFra
                         .add(R.id.fragment_main_recipe_list, recipeListFragment)
                         .commit();
 
-                //verticalDiv.setVisibility(View.GONE);
                 horizontalDiv.setVisibility(View.GONE);
 
-                /*//Current Recipe Info Fragment.
-                RecipeInfoFragment recipeInfoListFragment = new RecipeInfoFragment();
-
-                recipeInfoListFragment.setArguments(bundle);
-
-                fragmentManager.beginTransaction()
-                        .add(R.id.fragment_recipe_info, recipeInfoListFragment)
-                        .commit();
-
-                //Steps Fragment
-                RecipeStepsFragment recipeStepsFragment = new RecipeStepsFragment();
-                recipeStepsFragment.setArguments(bundle);
-                fragmentManager.beginTransaction()
-                        .add(R.id.fragment_recipe_steps2, recipeStepsFragment)
-                        .commit();*/
             }
         } else {
-            //false = single plane mode, will follow displaying fragments as separate activities.
-            //See onRecipeSelected Method for behavior.
+            /**
+             * false = single plane mode, will follow displaying fragments as separate activities.
+             * See onRecipeSelected Method for behavior.
+             */
             mTwoPane = false;
             if (savedInstanceState == null) {
                 //create FragmentManager and new reference to Fragment.

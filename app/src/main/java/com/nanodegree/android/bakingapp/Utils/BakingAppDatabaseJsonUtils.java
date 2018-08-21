@@ -63,6 +63,7 @@ public final class BakingAppDatabaseJsonUtils {
         JSONObject recipeObj = recipeList.getJSONObject(recipeId);
         JSONArray ingredientsArr = recipeObj.getJSONArray(RECIPE_INGREDIENTS);
 
+
         for(int x = 0; x < ingredientsArr.length(); x++){
             JSONObject ingredientsInfo = ingredientsArr.getJSONObject(x);
             RecipeIngredientInfo specificRecipeIngredients = new RecipeIngredientInfo(
@@ -76,22 +77,26 @@ public final class BakingAppDatabaseJsonUtils {
         return recipeIngredients;
     }
 
-    public static void getRecipeIngredientsCvData (Context context, List<RecipeIngredientInfo> ingredientInfo){
+    //used once an loader for an AsyncTask has been finished
+    //writes or inserts the last loaded RecipeIngredients data into a Content Provider
+    public static void getRecipeIngredientsCvData (Context context, List<RecipeIngredientInfo> ingredientInfo, String recipeName, int recipeId){
 
         BakingDataDbHelper bakingDataDbHelper = new BakingDataDbHelper(context);
         SQLiteDatabase mDb = bakingDataDbHelper.getWritableDatabase();
         mDb.delete(BakingDataContract.TABLE_NAME, null, null);
+
 
         for(int i = 0; i < ingredientInfo.size(); i++){
             String ingredient_description = ingredientInfo.get(i).getIngredient_description();
             Double ingredient_quantity = ingredientInfo.get(i).getIngredient_quantity();
             String ingredient_measure = ingredientInfo.get(i).getIngredient_measure();
 
-
+            //TODO:Find way to add recipeName here.
             ContentValues recipeIngredientData = new ContentValues();
             recipeIngredientData.put(BakingDataContract.COLUMN_INGREDIENT_DESCRIPTION, ingredient_description);
             recipeIngredientData.put(BakingDataContract.COLUMN_INGREDIENT_MEASURE, ingredient_measure);
             recipeIngredientData.put(BakingDataContract.COLUMN_INGREDIENT_QUANTITY, ingredient_quantity);
+            recipeIngredientData.put(BakingDataContract.COLUMN_RECIPE_NAME, recipeName);
 
 
             long rowCount = mDb.insert(BakingDataContract.TABLE_NAME, null, recipeIngredientData);

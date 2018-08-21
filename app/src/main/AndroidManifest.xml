@@ -20,8 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecipeInfoActivity" />
-        <activity android:name=".DetailedRecipeStepsActivity" />
+        <activity android:name=".RecipeInfoActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".DetailedRecipeStepsActivity"
+            android:launchMode="singleTop"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode">
+        </activity>
 
         <receiver android:name=".BakingAppWidget.BakingAppWidgetProvider">
             <intent-filter>

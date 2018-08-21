@@ -37,6 +37,7 @@ public class RecipeInfoActivity extends AppCompatActivity {
             //get recipeID.
             mRecipeID = mainActivityIntent.getIntExtra("recipeID", mRecipeID);
             Log.v("TESTING RECIPE ID #: ", String.valueOf(mRecipeID));
+
             //get and set title to current Activity
             mRecipeName = mainActivityIntent.getStringExtra("recipeName");
             setTitle(mRecipeName);
@@ -47,6 +48,8 @@ public class RecipeInfoActivity extends AppCompatActivity {
             bundle.putInt("recipe_id", mRecipeID);
             //load BakingData as Serializable
             bundle.putSerializable("RecipeData", (Serializable) selectedRecipeData);
+            //load RecipeName
+            bundle.putString("recipe_name", mRecipeName);
             //set bundle as args to Frag.
             recipeInfoListFragment.setArguments(bundle);
             fragmentManager.beginTransaction()

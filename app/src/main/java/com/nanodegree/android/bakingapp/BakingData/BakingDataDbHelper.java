@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class BakingDataDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 11;
     private static final String DATABASE_NAME = "recipe_ingredients.db";
 
     public BakingDataDbHelper(Context context) {
@@ -22,7 +22,9 @@ public class BakingDataDbHelper extends SQLiteOpenHelper{
                 BakingDataContract.TABLE_NAME + "(" +
                 BakingDataContract.COLUMN_INGREDIENT_QUANTITY + " TEXT NOT NULL, " +
                 BakingDataContract.COLUMN_INGREDIENT_MEASURE + " TEXT NOT NULL, " +
-                BakingDataContract.COLUMN_INGREDIENT_DESCRIPTION + " TEXT NOT NULL" +
+                BakingDataContract.COLUMN_INGREDIENT_DESCRIPTION + " TEXT NOT NULL, " +
+                BakingDataContract.COLUMN_RECIPE_NAME + " TEXT, " +
+                BakingDataContract.COLUMN_RECIPE_ID + " TEXT " +
                 ")";
 
         db.execSQL(SQL_CREATE_TABLE);

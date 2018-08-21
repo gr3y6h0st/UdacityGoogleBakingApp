@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nanodegree.android.bakingapp.BakingAppWidget.BakingAppWidgetProvider;
+import com.nanodegree.android.bakingapp.BakingData.BakingData;
 import com.nanodegree.android.bakingapp.BakingData.RecipeIngredientInfo;
 import com.nanodegree.android.bakingapp.Utils.BakingAppDatabaseJsonUtils;
 import com.nanodegree.android.bakingapp.Utils.NetworkUtils;
@@ -48,6 +49,7 @@ public class RecipeInfoFragment extends Fragment implements
     private Parcelable mPosition;
     private int mRecipeID;
     public static List<RecipeIngredientInfo> RecipeIngredientInfoList = new ArrayList<>();
+    public static List<BakingData> BakingDataList = new ArrayList<>();
     public static final String RECIPE_INFO_DATA = "RecipeIngredientInfoList";
     private static final String RVPOSITION = "recipeInfoRv";
     public static final int ID_RECIPE_INFO_LOADER = 119;
@@ -82,7 +84,8 @@ public class RecipeInfoFragment extends Fragment implements
 
         if (getArguments() != null){
             mRecipeID = getArguments().getInt("recipe_id");
-            Log.v(TAG, "RECEIVED!" + mRecipeID);
+            mRecipeName = getArguments().getString("recipe_name");
+            Log.v(TAG, "RECEIVED!" + mRecipeID + mRecipeName);
         } else{
             Log.v(TAG, "Error Receiving bundle from RecipeInfoActivity. Bundle may be null.");
         }
@@ -156,7 +159,8 @@ public class RecipeInfoFragment extends Fragment implements
 
             mRecipeInfoAdapter.notifyRecipeIngredientInfoChange(RecipeIngredientInfoList);
 
-            BakingAppDatabaseJsonUtils.getRecipeIngredientsCvData(getContext(), RecipeIngredientInfoList);
+            BakingAppDatabaseJsonUtils.getRecipeIngredientsCvData(getContext(), RecipeIngredientInfoList, mRecipeName, mRecipeID);
+
 
             BakingAppWidgetProvider.sendRefreshBroadcast(getContext());
         } else{

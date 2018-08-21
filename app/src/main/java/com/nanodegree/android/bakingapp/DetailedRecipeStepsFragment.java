@@ -1,5 +1,6 @@
 package com.nanodegree.android.bakingapp;
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,19 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.nanodegree.android.bakingapp.BakingData.RecipeSteps;
 
@@ -60,9 +61,13 @@ public class DetailedRecipeStepsFragment extends Fragment {
     int currentStepPosition;
     String rStepVideoUrl = "";
 
+    int windowIndex;
+    long lastPlayerPosition;
+    boolean autoPlay = true;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
             //obtains and sets recipeSteps data from savedInstance to handle rotation
@@ -70,6 +75,7 @@ public class DetailedRecipeStepsFragment extends Fragment {
 
             //obtains and sets saved position from savedInstance
             currentStepPosition = savedInstanceState.getInt(CURRENT_STEP);
+
         }
 
         // Inflate the layout for this fragment
@@ -82,7 +88,7 @@ public class DetailedRecipeStepsFragment extends Fragment {
 
             detailedStepsTv.setText(recipeSteps.get(currentStepPosition).getStep_description());
             if(currentStepPosition == 0){
-                prevBttn.setVisibility(View.INVISIBLE);
+                prevBttn.setVisibility(View.GONE);
             }
 
             if(recipeSteps.get(currentStepPosition).getStep_videoURL().isEmpty()){
@@ -95,13 +101,13 @@ public class DetailedRecipeStepsFragment extends Fragment {
                 } else {
                     rStepVideoUrl = recipeSteps.get(currentStepPosition).getStep_thumbnailURL();
                     // Initialize Exoplayer w/ step Url.
-                    initializePlayer(Uri.parse(rStepVideoUrl));
+                    initializePlayer();
                 }
             } else{
                 //otherwise set VideoUrl if available.
                 rStepVideoUrl = recipeSteps.get(currentStepPosition).getStep_videoURL();
                 // Initialize Exoplayer w/ step Url.
-                initializePlayer(Uri.parse(rStepVideoUrl));
+                initializePlayer();
             }
 
             nextBttn.setOnClickListener(new View.OnClickListener() {
@@ -128,12 +134,12 @@ public class DetailedRecipeStepsFragment extends Fragment {
                                 mRecipeStepPv.setVisibility(View.GONE);
                             } else {
                                 rStepVideoUrl = recipeSteps.get(currentStepPosition).getStep_thumbnailURL();
-                                initializePlayer(Uri.parse(rStepVideoUrl));
+                                initializePlayer();
                             }
                         } else{
                             //otherwise set VideoUrl if available.
                             rStepVideoUrl = recipeSteps.get(currentStepPosition).getStep_videoURL();
-                            initializePlayer(Uri.parse(rStepVideoUrl));
+                            initializePlayer();
                         }
                         //set nextBttn text to "Back to 1st Step"
                         if(currentStepPosition == recipeSteps.size()-1){
@@ -142,7 +148,7 @@ public class DetailedRecipeStepsFragment extends Fragment {
 
                     } else {
                         currentStepPosition = 0;
-                        prevBttn.setVisibility(View.INVISIBLE);
+                        prevBttn.setVisibility(View.GONE);
                         nextBttn.setText(getString(R.string.next_step_button_txt));
 
                         if(recipeSteps.get(currentStepPosition).getStep_videoURL().isEmpty()){
@@ -163,7 +169,7 @@ public class DetailedRecipeStepsFragment extends Fragment {
 
                     if(mRecipeStepPv.getVisibility() == View.VISIBLE){
                         // Initialize Exoplayer w/ step Url only if the View is Visible!.
-                        initializePlayer(Uri.parse(rStepVideoUrl));
+                        initializePlayer();
                     } else{
                         Log.v(TAG, "SimpleExoPlayerView is not visible, will not initialize player.");
                     }
@@ -196,25 +202,25 @@ public class DetailedRecipeStepsFragment extends Fragment {
                                 mRecipeStepPv.setVisibility(View.GONE);
                             } else {
                                 rStepVideoUrl = recipeSteps.get(currentStepPosition).getStep_thumbnailURL();
-                                initializePlayer(Uri.parse(rStepVideoUrl));
+                                initializePlayer();
                             }
                         } else {
                             //otherwise set VideoUrl if available.
                             rStepVideoUrl = recipeSteps.get(currentStepPosition).getStep_videoURL();
-                            initializePlayer(Uri.parse(rStepVideoUrl));
+                            initializePlayer();
                         }
                     }
                     else if(currentStepPosition == 0){
-                        prevBttn.setVisibility(View.INVISIBLE);
+                        prevBttn.setVisibility(View.GONE);
                     }
 
                     detailedStepsTv.setText(recipeSteps.get(currentStepPosition).getStep_description());
 
                     if (mRecipeStepPv.getVisibility() == View.VISIBLE) {
                         // Initialize Exoplayer w/ step Url only if the View is Visible!.
-                        initializePlayer(Uri.parse(rStepVideoUrl));
+                        initializePlayer();
                     } else {
-                        Log.v(TAG, "SimpleExoPlayerView is not visible, will not initialize player.");
+                        Log.v(TAG, "PlayerView is not visible, will not initialize player.");
                     }
                 }
 
@@ -235,21 +241,23 @@ public class DetailedRecipeStepsFragment extends Fragment {
 
     /**
      * Initialize ExoPlayer.
-     * @param mediaUri The URI of the sample to play.
      */
-    private void initializePlayer(Uri mediaUri) {
+    private void initializePlayer() {
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
-            TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
-            mRecipeStepPv.setPlayer(mExoPlayer);
-            // Prepare the MediaSource.
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(getActivity()), new DefaultTrackSelector(), loadControl);
             String userAgent = Util.getUserAgent(getContext(), getResources().getString(R.string.app_name));
-            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
-                    getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
-            mExoPlayer.prepare(mediaSource);
+            // Prepare the MediaSource.
+
+            mRecipeStepPv.setPlayer(mExoPlayer);
             mExoPlayer.setPlayWhenReady(true);
+
+            MediaSource mediaSource = new ExtractorMediaSource
+                    .Factory(new DefaultHttpDataSourceFactory(userAgent))
+                    .createMediaSource(Uri.parse(rStepVideoUrl));
+            mExoPlayer.prepare(mediaSource,false, false);
+
         }
     }
 
@@ -259,6 +267,9 @@ public class DetailedRecipeStepsFragment extends Fragment {
     private void releasePlayer() {
         //Check if Exoplayer variable is null first. Release player if not null.
         if (mExoPlayer != null){
+            lastPlayerPosition = mExoPlayer.getCurrentPosition();
+            windowIndex = mExoPlayer.getCurrentWindowIndex();
+            autoPlay = mExoPlayer.getPlayWhenReady();
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
@@ -267,9 +278,32 @@ public class DetailedRecipeStepsFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        releasePlayer();
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checking the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //hide all buttons and textviews in landscape.
+            prevBttn.setVisibility(View.GONE);
+            nextBttn.setVisibility(View.GONE);
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mRecipeStepPv.getLayoutParams();
+            //modify dimensions of the PlayerView to extend as big as it can.
+            params.width= ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height= ViewGroup.LayoutParams.MATCH_PARENT;
+            mRecipeStepPv.setLayoutParams(params);
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            //show buttons and textviews
+            prevBttn.setVisibility(View.VISIBLE);
+            nextBttn.setVisibility(View.VISIBLE);
+            detailedStepsTv.setVisibility(View.VISIBLE);
+            //modify dimensions of the PlayerView to original state.
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mRecipeStepPv.getLayoutParams();
+            params.width= ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height=ViewGroup.LayoutParams.WRAP_CONTENT;
+            mRecipeStepPv.setLayoutParams(params);
+        }
     }
 
     @Override
@@ -277,6 +311,6 @@ public class DetailedRecipeStepsFragment extends Fragment {
 
         currentState.putSerializable(RECIPE_DETAILED_STEPS, (ArrayList<RecipeSteps>) recipeSteps);
         currentState.putInt(CURRENT_STEP, currentStepPosition);
-
     }
+
 }

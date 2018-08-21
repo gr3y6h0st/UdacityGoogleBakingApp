@@ -104,6 +104,8 @@ public class BakingDataContentProvider extends ContentProvider {
         return ingredientsDataUri;
     }
 
+    //Once AsyncTask Loader finishes, call delete to
+    // erase the data in the table prior to writing the selected recipe.
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         int numRowsDeleted = 0;

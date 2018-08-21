@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nanodegree.android.bakingapp.BakingData.BakingData;
+import com.nanodegree.android.bakingapp.SimpleIdlingResource.SimpleIdlingResource;
 import com.nanodegree.android.bakingapp.Utils.BakingAppDatabaseJsonUtils;
 import com.nanodegree.android.bakingapp.Utils.NetworkUtils;
 import com.nanodegree.android.bakingapp.Utils.RecipesAdapter;
@@ -42,6 +45,8 @@ public class MainRecipeListFragment extends Fragment implements
 
     private final String TAG = MainActivity.class.getSimpleName();
     public static final String BAKING_DATA = "baking_data";
+    @Nullable
+    SimpleIdlingResource mIdlingResource;
 
 
     private RecipesAdapter mAdapter;
@@ -71,9 +76,22 @@ public class MainRecipeListFragment extends Fragment implements
         }
     }
 
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        //initiate IdlingResource
+        getIdlingResource();
+
         //check if savedInstanceState is not null. Restore extract restoreSavedState if it exists and is not null.
         //logs error if attempt to restoredSavedState is null.
         if (savedInstanceState != null) {
@@ -114,6 +132,11 @@ public class MainRecipeListFragment extends Fragment implements
 
         switch (id) {
             case ID_BAKING_LOADER:
+
+                //notify Espresso test to pause test
+                if (mIdlingResource != null) {
+                    mIdlingResource.setIdleState(false);
+                }
 
                 return new AsyncTaskLoader<List<BakingData>>(getContext()) {
                     List<BakingData> mBakingData;
@@ -168,6 +191,10 @@ public class MainRecipeListFragment extends Fragment implements
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<BakingData>> loader, List<BakingData> data) {
+        //gives go ahead to Espresso Test that background tasks are done and it can continue
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(true);
+        }
 
         if(data != null){
             //populate global List variable for use.
@@ -180,6 +207,7 @@ public class MainRecipeListFragment extends Fragment implements
             //restore position on List
             mLinearLayoutManager.onRestoreInstanceState(mPosition);
             mAdapter.notifyBakingDataChange(data);
+
         } else{
             Log.v("ASYNC TASK README: ", "Baking Data is null or empty.");
         }

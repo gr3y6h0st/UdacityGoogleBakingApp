@@ -17,7 +17,6 @@
             android:background="#09C"
             android:gravity="center"
             android:contentDescription="@string/appwidget_text"
-            android:text="@string/appwidget_text"
             android:textColor="#ffffff"
             android:textSize="24sp"
             android:textStyle="bold|italic" />
@@ -32,8 +31,8 @@
             android:id="@+id/bakingAppListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:dividerHeight="1dp"
-            android:divider="#eeeeee"
+            android:dividerHeight="2dp"
+            android:divider="@android:color/darker_gray"
             tools:listitem="@layout/baking_app_widget_list_item">
 
         </ListView>

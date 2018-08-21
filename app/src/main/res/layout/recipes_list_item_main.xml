@@ -9,8 +9,12 @@
         android:id="@+id/recipe_main_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="cursive"
+        android:textStyle="bold"
         android:gravity="center_horizontal"
         android:padding="16dp"
+        android:textSize="28sp"
+        android:typeface="monospace"
         tools:text="Recipe Name" />
 
     <ImageView

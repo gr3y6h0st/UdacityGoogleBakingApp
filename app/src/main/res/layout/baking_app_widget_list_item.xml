@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widgetLvItemContainer"
     android:orientation="horizontal"
     android:paddingStart="8dp"
@@ -11,13 +12,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!-- Serves as the model for what the listView item will look like -->
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/baking_app_widget_item_tv"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/widgetItemTaskNameLabel"
-        android:gravity="start"
-        android:layout_weight="1"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_gravity="center_vertical"/>
+        android:textAlignment="center"
+        tools:text="Item"
+        android:textColor="@android:color/black" />
 
 </LinearLayout>
